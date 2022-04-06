@@ -1,0 +1,28 @@
+#!/bin/bash
+
+pattern=".*~|#.*#"
+path="."
+
+if [[ $# -gt 0 ]]; then
+    path="$1"
+fi
+
+if [[ $# -gt 1 ]]; then
+    pattern="$2"
+fi
+
+depth=1
+
+files=$(find "$path" -maxdepth $depth -type f | grep -E "$pattern")
+
+if [[ "$files" == "" ]]; then
+    echo "No files matching $pattern in $path/"
+    exit 1
+fi
+
+echo $files
+echo -n "Remove above files? (y/N): "
+read input
+if [[ "$input" == "y" ]]; then
+    rm $files
+fi
