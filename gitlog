@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ "$1" == "-h" ]; then
+    echo "usage: $(basename $0) [<branches>|--all]"
+    echo "    Options:"
+    echo "      <branches>      shows selected branches"
+    echo "      --all           shows all branches"
+    echo ""
+    echo "    If no option, current branches are shown"
+    exit 0
+fi
+
+if [ $# -eq 0 ]; then
+    
+    branches=$(git for-each-ref refs/heads --format="%(refname:short)")
+    remotes=$(git for-each-ref refs/remotes --format="%(refname:short)")
+    
+    upstreams=$(echo "$remotes" | grep "main\|master\|"$(echo $branches | sed "s/\ /\\\|/g"))
+
+    option="$branches $upstreams"
+
+else
+    option="$@"
+fi
+
+git log --oneline --graph --decorate $option 
