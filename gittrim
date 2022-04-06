@@ -1,0 +1,9 @@
+#!/bin/bash
+
+branches=$(git for-each-ref refs/heads --format="%(refname:short)")
+echo "Lokala grenar: $branches"
+echo -n "Ta bort lokala grenar (förutom den du står på)? (y/N): "
+read input
+if [ "$input" == "y" ]; then
+    git branch -D $branches &>/dev/null
+fi
